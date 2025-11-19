@@ -1,20 +1,6 @@
 [
-  {
-    "id": "P1",
-    "name": "Aditya",
-    "age": "18",
-    "problem": "piles",
-    "bedId": "B7",
-    "admittedAt": "2025-11-19T14:43:18.144Z"
-  },
-  {
-    "id": "P2",
-    "name": "Aditya",
-    "age": "18",
-    "problem": "piles",
-    "bedId": "B1",
-    "admittedAt": "2025-11-19T15:22:16.679Z"
-  },
+  
+
   {
     "id": "P3",
     "name": "Aditya",
@@ -31,33 +17,6 @@
     "bedId": "B2",
     "resourceId": "R3",
     "admittedAt": "2025-11-19T17:08:43.686Z"
-  },
-  {
-    "id": "P5",
-    "name": "hiteshi",
-    "age": "18",
-    "problem": "none",
-    "bedId": "B1",
-    "resourceId": "R4",
-    "admittedAt": "2025-11-19T17:10:54.531Z"
-  },
-  {
-    "id": "P6",
-    "name": "anonymous",
-    "age": "18",
-    "problem": "cough",
-    "bedId": "B4",
-    "resourceId": "R4",
-    "admittedAt": "2025-11-19T17:12:17.810Z"
-  },
-  {
-    "id": "P7",
-    "name": "Maya ",
-    "age": "32",
-    "problem": "No problem",
-    "bedId": "B3",
-    "resourceId": "R4",
-    "admittedAt": "2025-11-19T17:14:01.456Z"
   },
   {
     "id": "P8",
