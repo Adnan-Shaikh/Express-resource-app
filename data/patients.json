@@ -22,5 +22,50 @@
     "problem": "piles",
     "bedId": "B1",
     "admittedAt": "2025-11-19T15:24:54.664Z"
+  },
+  {
+    "id": "P4",
+    "name": "rahul",
+    "age": "12",
+    "problem": "none",
+    "bedId": "B2",
+    "resourceId": "R3",
+    "admittedAt": "2025-11-19T17:08:43.686Z"
+  },
+  {
+    "id": "P5",
+    "name": "hiteshi",
+    "age": "18",
+    "problem": "none",
+    "bedId": "B1",
+    "resourceId": "R4",
+    "admittedAt": "2025-11-19T17:10:54.531Z"
+  },
+  {
+    "id": "P6",
+    "name": "anonymous",
+    "age": "18",
+    "problem": "cough",
+    "bedId": "B4",
+    "resourceId": "R4",
+    "admittedAt": "2025-11-19T17:12:17.810Z"
+  },
+  {
+    "id": "P7",
+    "name": "Maya ",
+    "age": "32",
+    "problem": "No problem",
+    "bedId": "B3",
+    "resourceId": "R4",
+    "admittedAt": "2025-11-19T17:14:01.456Z"
+  },
+  {
+    "id": "P8",
+    "name": "Sahil",
+    "age": "28",
+    "problem": "smart",
+    "bedId": "B5",
+    "resourceId": "R4",
+    "admittedAt": "2025-11-19T17:15:45.611Z"
   }
 ]

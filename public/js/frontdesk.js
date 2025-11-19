@@ -1,4 +1,4 @@
-// Load beds and resources on page load
+// Load beds, resources, and patients on page load
 window.onload = () => {
     loadBeds();
     loadResources();
@@ -42,10 +42,12 @@ function loadResources() {
 }
 
 // -------------------- Submit Form --------------------
-document.getElementById("submitBtn").addEventListener("click", () => {
-    const name = document.getElementById("name").value;
-    const age = document.getElementById("age").value;
-    const problem = document.getElementById("problem").value;
+document.getElementById("admitForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const name = document.getElementById("pname").value;
+    const age = document.getElementById("page").value;
+    const problem = document.getElementById("pproblem").value;
     const bedId = document.getElementById("bedSelect").value;
     const resourceId = document.getElementById("resourceSelect").value;
 
@@ -67,28 +69,23 @@ document.getElementById("submitBtn").addEventListener("click", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
     })
-        .then(res => res.json())
-        .then(data => {
-            if (data.error) {
-                alert("❌ Allocation Failed: " + data.error);
-            } else {
-                alert(
-                    `✅ Patient Successfully Allocated!
-Patient: ${data.name}
-Bed: ${data.bedId}
-Resource: ${data.resourceId ? data.resourceId : "None"}`
-                );
-
-                loadBeds();
-                loadAllocatedPatients();
-            }
-        })
-        .catch(err => {
-            alert("❌ Server Error: " + err.message);
-        });
+    .then(res => res.json())
+    .then(data => {
+        if (data.error) {
+            alert("❌ Allocation Failed");
+        } else {
+            alert("✅ Submission Successful");
+            loadBeds();
+            loadAllocatedPatients();
+        }
+    })
+    .catch(() => {
+        alert("❌ Server Error");
+    });
 });
 
-// -------------------- Load allocated patients --------------------
+// -------------------- Load Allocated Patients --------------------
+// -------------------- Load Allocated Patients --------------------
 function loadAllocatedPatients() {
     fetch("/api/patients")
         .then(res => res.json())
@@ -97,14 +94,27 @@ function loadAllocatedPatients() {
             tbody.innerHTML = "";
 
             patients.forEach(p => {
+                let statusText = "None";
+                // You may need to adapt this logic based on true data structure
+                if (p.status) {
+                    if (p.status.toLowerCase() === "maintenance" || p.status.toLowerCase() === "under maintenance") {
+                        statusText = "Under Maintenance";
+                    } else if (p.status.toLowerCase() === "assigned" || p.resourceId) {
+                        statusText = "Assigned";
+                    } else {
+                        statusText = p.status;
+                    }
+                } else if (p.resourceId) {
+                    statusText = "Assigned";
+                }
+                // Default fallback
                 tbody.innerHTML += `
                     <tr>
                         <td>${p.bedId}</td>
                         <td>${p.name}</td>
-                        <td>${p.resourceId ? p.resourceId : "None"}</td>
+                        <td>${statusText}</td>
                     </tr>
                 `;
             });
         });
 }
-

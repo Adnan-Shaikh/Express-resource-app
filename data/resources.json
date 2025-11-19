@@ -15,13 +15,13 @@
     "id": "R3",
     "name": "ECG Machine",
     "total": 2,
-    "available": 1
+    "available": 0
   },
   {
     "id": "R4",
     "name": "Bedsheets",
     "total": 50,
-    "available": 48
+    "available": 44
   },
   {
     "id": "R5",
