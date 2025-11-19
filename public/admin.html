@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+  <nav>
+    <button id="logout">Logout</button>
+    <a href="/resources.html">Resources Page</a>
+    <a href="/frontdesk.html">Front Desk</a>
+  </nav>
+
+  <div class="container">
+    <h1>Admin Panel</h1>
+
+    <section class="card">
+      <h3>All Beds</h3>
+      <table id="bedsTable">
+        <thead><tr><th>Bed</th><th>Status</th><th>Patient</th><th>Resources</th><th>Change Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="card">
+      <h3>Allocate Resource to Bed</h3>
+      <label>Choose Bed</label><select id="adminBedSelect"></select>
+      <label>Choose Resource</label><select id="adminResSelect"></select>
+      <label>Quantity</label><input id="adminQty" type="number" value="1" min="1" />
+      <button id="allocBtn">Allocate</button>
+      <div id="allocMsg"></div>
+    </section>
+  </div>
+
+  <script src="/public/js/auth.js"></script>
+  <script src="/public/js/admin.js"></script>
+</body>
+</html>

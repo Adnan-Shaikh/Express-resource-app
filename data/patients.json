@@ -1,0 +1,26 @@
+[
+  {
+    "id": "P1",
+    "name": "Aditya",
+    "age": "18",
+    "problem": "piles",
+    "bedId": "B7",
+    "admittedAt": "2025-11-19T14:43:18.144Z"
+  },
+  {
+    "id": "P2",
+    "name": "Aditya",
+    "age": "18",
+    "problem": "piles",
+    "bedId": "B1",
+    "admittedAt": "2025-11-19T15:22:16.679Z"
+  },
+  {
+    "id": "P3",
+    "name": "Aditya",
+    "age": "18",
+    "problem": "piles",
+    "bedId": "B1",
+    "admittedAt": "2025-11-19T15:24:54.664Z"
+  }
+]

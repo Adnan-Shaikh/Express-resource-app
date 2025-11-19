@@ -1,0 +1,32 @@
+[
+  {
+    "id": "R1",
+    "name": "Ventilator",
+    "total": 5,
+    "available": 0
+  },
+  {
+    "id": "R2",
+    "name": "Oxygen Tank",
+    "total": 10,
+    "available": 10
+  },
+  {
+    "id": "R3",
+    "name": "ECG Machine",
+    "total": 2,
+    "available": 1
+  },
+  {
+    "id": "R4",
+    "name": "Bedsheets",
+    "total": 50,
+    "available": 48
+  },
+  {
+    "id": "R5",
+    "name": "pillow",
+    "total": 100,
+    "available": 100
+  }
+]

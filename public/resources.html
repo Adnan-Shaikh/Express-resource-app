@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Resources</title>
+  <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+  <nav>
+    <button id="logout">Logout</button>
+    <a href="/admin.html">Admin Panel</a>
+    <a href="/frontdesk.html">Front Desk</a>
+  </nav>
+
+  <div class="container">
+    <h1>Resources</h1>
+
+    <section class="card">
+      <h3>Add Resource</h3>
+      <label>Name</label><input id="resName" />
+      <label>Total Quantity</label><input id="resTotal" type="number" value="1" min="1" />
+      <button id="addResBtn">Add Resource</button>
+      <div id="resMsg"></div>
+    </section>
+
+    <section class="card">
+      <h3>All Resources</h3>
+      <table id="resourcesTable">
+        <thead><tr><th>Name</th><th>Total</th><th>Available</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="/public/js/auth.js"></script>
+  <script src="/public/js/resources.js"></script>
+</body>
+</html>

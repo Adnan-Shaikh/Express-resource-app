@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Front Desk</title>
+  <link rel="stylesheet" href="/public/css/styles.css">
+</head>
+<body>
+  <nav><button id="logout">Logout</button></nav>
+  <div class="container">
+    <h1>Front Desk (Reception)</h1>
+
+    <section class="card">
+      <h3>Admit Patient & Allocate Bed</h3>
+      <form id="admitForm">
+        <label>Name</label><input id="pname" required />
+        <label>Age</label><input id="page" />
+        <label>Problem</label><input id="pproblem" />
+        <label>Choose Bed</label>
+        <label for="resources">Required Resources:</label>
+        <select id="resourceSelect">
+            <option value="">Select Resource</option>
+        </select>
+
+<small>Hold CTRL to select multiple</small>
+
+        <select id="bedSelect"></select>
+        <button type="submit">Admit</button>
+      </form>
+      <div id="admitMsg"></div>
+    </section>
+
+    <section class="card">
+      <h3>Allocated Beds</h3>
+      <table id="allocatedTable">
+        <thead><tr><th>Bed</th><th>Patient</th><th>Status</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script src="/public/js/auth.js"></script>
+  <script src="/public/js/frontdesk.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+[
+  {
+    "id": "B1",
+    "status": "available",
+    "patientId": null,
+    "resources": [
+      {
+        "name": "Ventilator",
+        "qty": 1
+      },
+      {
+        "name": "Ventilator",
+        "qty": 2
+      },
+      {
+        "name": "ECG Machine",
+        "qty": 1
+      },
+      {
+        "name": "Ventilator",
+        "qty": 2
+      },
+      {
+        "name": "Bedsheets",
+        "qty": 2
+      }
+    ]
+  },
+  {
+    "id": "B2",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B3",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B4",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B5",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B6",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B7",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B8",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B9",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  },
+  {
+    "id": "B10",
+    "status": "available",
+    "patientId": null,
+    "resources": []
+  }
+]
