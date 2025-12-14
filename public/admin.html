@@ -1,39 +1,128 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- GOOGLE FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
   <title>Admin Panel</title>
-  <link rel="stylesheet" href="/public/css/styles.css">
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #dff6ff, #9fc9ff);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #0066ff;
+      padding: 15px;
+      box-shadow: 0px 5px 12px rgba(0,0,0,0.15);
+    }
+
+    .section-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      margin-bottom: 35px;
+    }
+
+    th {
+      background: #005bea !important;
+      color: white !important;
+    }
+
+    .status-badge {
+      padding: 6px 10px;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .available { background: #28a745 !important; }
+    .reserved { background: #ff9800 !important; }
+    .maintenance { background: #d32f2f !important; }
+  </style>
+
 </head>
+
 <body>
-  <nav>
-    <button id="logout">Logout</button>
-    <a href="/resources.html">Resources Page</a>
-    <a href="/frontdesk.html">Front Desk</a>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-dark d-flex justify-content-between px-4">
+    <h4 class="text-white m-0">🏥 Hospital Admin Panel</h4>
+
+    <div>
+      <a href="/resources.html" class="btn btn-light me-2">Resources</a>
+      <a href="/frontdesk.html" class="btn btn-light me-2">Front Desk</a>
+      <button id="logout" class="btn btn-danger">Logout</button>
+    </div>
   </nav>
 
-  <div class="container">
-    <h1>Admin Panel</h1>
 
-    <section class="card">
-      <h3>All Beds</h3>
-      <table id="bedsTable">
-        <thead><tr><th>Bed</th><th>Status</th><th>Patient</th><th>Resources</th><th>Change Status</th></tr></thead>
+  <div class="container mt-4">
+
+    <!-- BEDS TABLE -->
+    <div class="section-card">
+      <h3 class="mb-3 text-primary">🛏 Bed Status</h3>
+
+      <table class="table table-striped table-hover text-center" id="bedsTable">
+        <thead>
+          <tr>
+            <th>Bed</th>
+            <th>Status</th>
+            <th>Patient</th>
+            <th>Update Status</th>
+          </tr>
+        </thead>
         <tbody></tbody>
       </table>
-    </section>
 
-    <section class="card">
-      <h3>Allocate Resource to Bed</h3>
-      <label>Choose Bed</label><select id="adminBedSelect"></select>
-      <label>Choose Resource</label><select id="adminResSelect"></select>
-      <label>Quantity</label><input id="adminQty" type="number" value="1" min="1" />
-      <button id="allocBtn">Allocate</button>
-      <div id="allocMsg"></div>
-    </section>
+    </div>
+
+    <!-- RESOURCE ALLOCATION -->
+    <div class="section-card">
+      <h3 class="mb-3 text-primary">⚡ Allocate Resource to Bed</h3>
+
+      <div class="row g-3">
+
+        <div class="col-md-4">
+          <label class="form-label">Select Bed</label>
+          <select id="adminBedSelect" class="form-select"></select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Select Resource</label>
+          <select id="adminResSelect" class="form-select"></select>
+        </div>
+
+        <div class="col-md-2">
+          <label class="form-label">Quantity</label>
+          <input id="adminQty" type="number" min="1" value="1" class="form-control" />
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+          <button id="allocBtn" class="btn btn-primary w-100">Allocate</button>
+        </div>
+
+      </div>
+
+      <div id="allocMsg" class="mt-3 fw-bold"></div>
+
+    </div>
+
   </div>
 
-  <script src="/public/js/auth.js"></script>
-  <script src="/public/js/admin.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/admin.js"></script>
+
 </body>
 </html>

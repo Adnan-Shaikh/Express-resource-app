@@ -1,38 +1,99 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Resources</title>
-  <link rel="stylesheet" href="/public/css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <title>Hospital Resources</title>
+
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #dff6ff, #9fc9ff);
+      min-height: 100vh;
+    }
+
+    .navbar {
+      background: #0066ff;
+      padding: 15px;
+      box-shadow: 0px 5px 12px rgba(0,0,0,0.15);
+    }
+
+    .section-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      margin-bottom: 35px;
+    }
+
+    th {
+      background: #005bea !important;
+      color: white !important;
+    }
+  </style>
 </head>
+
 <body>
-  <nav>
-    <button id="logout">Logout</button>
-    <a href="/admin.html">Admin Panel</a>
-    <a href="/frontdesk.html">Front Desk</a>
-  </nav>
 
-  <div class="container">
-    <h1>Resources</h1>
+<!-- NAVBAR (NO ADMIN ACCESS) -->
+<nav class="navbar navbar-dark d-flex justify-content-between px-4">
+  <h4 class="text-white m-0">⚙ Hospital Resources</h4>
+  
+  <div>
+    <a href="/frontdesk.html" class="btn btn-light me-2">Front Desk</a>
+    <button id="logout" class="btn btn-danger">Logout</button>
+  </div>
+</nav>
 
-    <section class="card">
-      <h3>Add Resource</h3>
-      <label>Name</label><input id="resName" />
-      <label>Total Quantity</label><input id="resTotal" type="number" value="1" min="1" />
-      <button id="addResBtn">Add Resource</button>
-      <div id="resMsg"></div>
-    </section>
 
-    <section class="card">
-      <h3>All Resources</h3>
-      <table id="resourcesTable">
-        <thead><tr><th>Name</th><th>Total</th><th>Available</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
+<div class="container mt-4">
+
+  <!-- ADD RESOURCE -->
+  <div class="section-card">
+    <h3 class="mb-3 text-primary">➕ Add Resource</h3>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Resource Name</label>
+        <input id="resName" class="form-control" placeholder="e.g., Ventilator" />
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Total Quantity</label>
+        <input id="resTotal" type="number" min="1" value="1" class="form-control" />
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button id="addResBtn" class="btn btn-success w-100">Add Resource</button>
+      </div>
+    </div>
+
+    <div id="resMsg" class="mt-3 fw-bold"></div>
   </div>
 
-  <script src="/public/js/auth.js"></script>
-  <script src="/public/js/resources.js"></script>
+
+  <!-- SHOW RESOURCES -->
+  <div class="section-card">
+    <h3 class="mb-3 text-primary">📋 Current Resources</h3>
+
+    <table class="table table-striped table-hover text-center" id="resourcesTable">
+      <thead>
+        <tr>
+          <th>Resource</th>
+          <th>Total</th>
+          <th>Available</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+</div>
+
+<script src="/js/resources.js"></script>
 </body>
 </html>

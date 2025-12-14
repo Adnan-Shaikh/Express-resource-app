@@ -2,31 +2,25 @@
   {
     "id": "B1",
     "status": "reserved",
-    "patientId": "P5",
+    "patientId": "P11",
     "resources": [
       {
-        "resourceId": "R4",
-        "name": "Bedsheets",
+        "resourceId": "R1",
+        "name": "Ventilator",
         "qty": 1
       }
     ]
   },
   {
     "id": "B2",
-    "status": "reserved",
-    "patientId": "P4",
-    "resources": [
-      {
-        "resourceId": "R3",
-        "name": "ECG Machine",
-        "qty": 1
-      }
-    ]
+    "status": "available",
+    "patientId": null,
+    "resources": []
   },
   {
     "id": "B3",
-    "status": "reserved",
-    "patientId": "P7",
+    "status": "available",
+    "patientId": null,
     "resources": [
       {
         "resourceId": "R4",
@@ -37,8 +31,8 @@
   },
   {
     "id": "B4",
-    "status": "reserved",
-    "patientId": "P6",
+    "status": "available",
+    "patientId": null,
     "resources": [
       {
         "resourceId": "R4",
@@ -49,8 +43,8 @@
   },
   {
     "id": "B5",
-    "status": "reserved",
-    "patientId": "P8",
+    "status": "available",
+    "patientId": null,
     "resources": [
       {
         "resourceId": "R4",

@@ -67,5 +67,29 @@
     "bedId": "B5",
     "resourceId": "R4",
     "admittedAt": "2025-11-19T17:15:45.611Z"
+  },
+  {
+    "id": "P9",
+    "name": "hiteshi",
+    "age": "",
+    "bedId": "B1",
+    "resourceId": "R2",
+    "admittedAt": "2025-11-20T03:44:55.789Z"
+  },
+  {
+    "id": "P10",
+    "name": "Adnan",
+    "age": "",
+    "bedId": "B2",
+    "resourceId": null,
+    "admittedAt": "2025-11-20T04:48:28.421Z"
+  },
+  {
+    "id": "P11",
+    "name": "Prth",
+    "age": "",
+    "bedId": "B1",
+    "resourceId": "R1",
+    "admittedAt": "2025-11-20T05:06:52.668Z"
   }
 ]

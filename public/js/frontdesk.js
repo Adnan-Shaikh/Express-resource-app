@@ -1,120 +1,104 @@
-// Load beds, resources, and patients on page load
-window.onload = () => {
+const API = "/api";
+api('/api/me').catch(() => window.location = '/index.html');
+
+
+const bedSelect = document.getElementById("bedSelect");
+const resSelect = document.getElementById("resSelect");
+const allocTable = document.querySelector("#allocTable tbody");
+const admitBtn = document.getElementById("admitBtn");
+const admitMsg = document.getElementById("admitMsg");
+
+// ---------------------- LOAD BEDS ---------------------- //
+async function loadBeds() {
+  try {
+    const res = await fetch(`${API}/beds`);
+    const beds = await res.json();
+
+    bedSelect.innerHTML = "";
+    allocTable.innerHTML = "";
+
+    // Show beds in table (only allocated ones)
+    beds.forEach(bed => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${bed.id}</td>
+        <td>${bed.patientId || "—"}</td>
+        <td>${bed.status}</td>
+      `;
+      allocTable.appendChild(tr);
+    });
+
+    // Populate dropdown (ALL BEDS)
+    beds.forEach(bed => {
+      const opt = document.createElement("option");
+      opt.value = bed.id;
+      opt.textContent = `${bed.id} (${bed.status})`;
+      bedSelect.appendChild(opt);
+    });
+
+  } catch (err) {
+    console.error("Failed to load beds:", err);
+  }
+}
+
+// ---------------------- LOAD RESOURCES ---------------------- //
+async function loadResources() {
+  try {
+    const res = await fetch(`${API}/resources`);
+    const resources = await res.json();
+
+    resSelect.innerHTML = "";
+
+    resources.forEach(r => {
+      const opt = document.createElement("option");
+      opt.value = r.id;
+      opt.textContent = `${r.name} (${r.available}/${r.total})`;
+      resSelect.appendChild(opt);
+    });
+
+  } catch (err) {
+    console.error("Failed to load resources:", err);
+  }
+}
+
+// ---------------------- ADMIT PATIENT ---------------------- //
+admitBtn.addEventListener("click", async () => {
+  const data = {
+    name: document.getElementById("pName").value.trim(),
+    age: document.getElementById("pAge").value,
+    gender: document.getElementById("pGender").value,
+    condition: document.getElementById("pCondition").value.trim(),
+    bedId: bedSelect.value,
+    resourceId: resSelect.value,
+    qty: parseInt(document.getElementById("resQty").value)
+  };
+
+  const res = await fetch(`${API}/patients`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  const result = await res.json();
+
+  if (result.error) {
+    admitMsg.textContent = "❌ " + result.error;
+    admitMsg.style.color = "red";
+  } else {
+    admitMsg.textContent = "✔ Patient Admitted Successfully!";
+    admitMsg.style.color = "green";
     loadBeds();
     loadResources();
-    loadAllocatedPatients();
-};
-
-// -------------------- Load Beds --------------------
-function loadBeds() {
-    fetch("/api/beds")
-        .then(res => res.json())
-        .then(beds => {
-            const bedSelect = document.getElementById("bedSelect");
-            bedSelect.innerHTML = "";
-
-            beds.forEach(bed => {
-                if (bed.status === "available") {
-                    bedSelect.innerHTML += `
-                        <option value="${bed.id}">${bed.id}</option>
-                    `;
-                }
-            });
-        });
-}
-
-// -------------------- Load Resources --------------------
-function loadResources() {
-    fetch("/api/resources-frontdesk")
-        .then(res => res.json())
-        .then(resources => {
-            const select = document.getElementById("resourceSelect");
-            select.innerHTML = `<option value="">-- No Resource --</option>`;
-
-            resources.forEach(r => {
-                if (r.available > 0) {
-                    select.innerHTML += `
-                        <option value="${r.id}">${r.name}</option>
-                    `;
-                }
-            });
-        });
-}
-
-// -------------------- Submit Form --------------------
-document.getElementById("admitForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const name = document.getElementById("pname").value;
-    const age = document.getElementById("page").value;
-    const problem = document.getElementById("pproblem").value;
-    const bedId = document.getElementById("bedSelect").value;
-    const resourceId = document.getElementById("resourceSelect").value;
-
-    if (!name || !bedId) {
-        alert("Name and Bed are required");
-        return;
-    }
-
-    const body = {
-        name,
-        age,
-        problem,
-        bedId,
-        resourceId: resourceId || null
-    };
-
-    fetch("/api/patients-frontdesk", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.error) {
-            alert("❌ Allocation Failed");
-        } else {
-            alert("✅ Submission Successful");
-            loadBeds();
-            loadAllocatedPatients();
-        }
-    })
-    .catch(() => {
-        alert("❌ Server Error");
-    });
+  }
 });
 
-// -------------------- Load Allocated Patients --------------------
-// -------------------- Load Allocated Patients --------------------
-function loadAllocatedPatients() {
-    fetch("/api/patients")
-        .then(res => res.json())
-        .then(patients => {
-            const tbody = document.querySelector("#allocatedTable tbody");
-            tbody.innerHTML = "";
+// ---------------------- LOGOUT ---------------------- //
+document.getElementById("logout").addEventListener("click", () => {
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = "/index.html";
+});
 
-            patients.forEach(p => {
-                let statusText = "None";
-                // You may need to adapt this logic based on true data structure
-                if (p.status) {
-                    if (p.status.toLowerCase() === "maintenance" || p.status.toLowerCase() === "under maintenance") {
-                        statusText = "Under Maintenance";
-                    } else if (p.status.toLowerCase() === "assigned" || p.resourceId) {
-                        statusText = "Assigned";
-                    } else {
-                        statusText = p.status;
-                    }
-                } else if (p.resourceId) {
-                    statusText = "Assigned";
-                }
-                // Default fallback
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${p.bedId}</td>
-                        <td>${p.name}</td>
-                        <td>${statusText}</td>
-                    </tr>
-                `;
-            });
-        });
-}
+// ---------------------- INITIAL LOAD ---------------------- //
+loadBeds();
+loadResources();

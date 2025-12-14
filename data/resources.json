@@ -3,7 +3,7 @@
     "id": "R1",
     "name": "Ventilator",
     "total": 5,
-    "available": 0
+    "available": 4
   },
   {
     "id": "R2",
@@ -15,18 +15,36 @@
     "id": "R3",
     "name": "ECG Machine",
     "total": 2,
-    "available": 0
+    "available": 2
   },
   {
     "id": "R4",
     "name": "Bedsheets",
     "total": 50,
-    "available": 44
+    "available": 50
   },
   {
     "id": "R5",
     "name": "pillow",
     "total": 100,
     "available": 100
+  },
+  {
+    "id": "R6",
+    "name": "Oxygen masks",
+    "total": 100,
+    "available": 100
+  },
+  {
+    "id": "R7",
+    "name": "Saline",
+    "total": 30,
+    "available": 30
+  },
+  {
+    "id": "R8",
+    "name": "Saline",
+    "total": 50,
+    "available": 50
   }
 ]
