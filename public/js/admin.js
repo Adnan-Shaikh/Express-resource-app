@@ -11,25 +11,19 @@ const bedsTable = document.querySelector("#bedsTable tbody");
 
 // ------------------------- LOAD BEDS -------------------------
 async function loadBeds() {
-  const res = await fetch(`${API}/beds`);
-  const beds = await res.json();
+  const beds = await api('/api/beds');
+  const tbody = document.querySelector('#bedsTable tbody');
+  tbody.innerHTML = '';
 
-  bedsTable.innerHTML = "";
-  bedSelect.innerHTML = "";
+  beds.forEach(b => {
 
-  beds.forEach(bed => {
-    // Populate bed dropdown
-    const opt = document.createElement("option");
-    opt.value = bed.id;
-    opt.textContent = `${bed.id} (${bed.status})`;
-    bedSelect.appendChild(opt);
+    const patient = b.patientId ? b.patientId : '-';
 
-    // Add table row
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${bed.id}</td>
-      <td><span class="status-badge ${bed.status}">${bed.status}</span></td>
-      <td>${bed.patientId || "—"}</td>
+      <td>${b.id}</td>
+      <td>${b.status}</td>
+      <td>${patient}</td>
       <td>
         <select class="statusChange form-select" data-id="${bed.id}">
           <option value="available" ${bed.status === "available" ? "selected" : ""}>Available</option>
@@ -38,84 +32,75 @@ async function loadBeds() {
         </select>
       </td>
     `;
-    
-    bedsTable.appendChild(tr);
+    tbody.appendChild(tr);
+
+    tr.querySelector('.statusSelect').value = b.status;
   });
 
-  // Add status change listeners
-  document.querySelectorAll(".statusChange").forEach(sel => {
-    sel.addEventListener("change", async () => {
-      await fetch(`${API}/beds/${sel.dataset.id}/status`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: sel.value })
-      });
-      loadBeds();
+  // attach listeners
+  document.querySelectorAll('.statusSelect').forEach(sel => {
+    sel.addEventListener('change', async (e) => {
+      const bedId = e.target.dataset.bed;
+      const status = e.target.value;
+      try {
+        await api('/api/beds/' + bedId + '/status', {
+          method: 'PUT',
+          body: { status }
+        });
+        loadBeds();
+      } catch (err) {
+        document.getElementById('allocMsg').innerText = err.error || 'Error';
+      }
     });
   });
 }
 
+async function populateAdminSelects() {
+  const beds = await api('/api/beds');
+  const bedSel = document.getElementById('adminBedSelect');
+  bedSel.innerHTML = '';
+  beds.forEach(b => {
+    const opt = document.createElement('option');
+    opt.value = b.id;
+    opt.textContent = b.id;
+    bedSel.appendChild(opt);
+  });
 
-
-// ------------------------- LOAD RESOURCES -------------------------
-async function loadResources() {
-  const res = await fetch(`${API}/resources`);
-  const resources = await res.json();
-
-  resSelect.innerHTML = "";
-
-  resources.forEach(resource => {
-    const opt = document.createElement("option");
-    opt.value = resource.id;
-    opt.textContent = `${resource.name} (${resource.available}/${resource.total})`;
-    resSelect.appendChild(opt);
+  const resources = await api('/api/resources');
+  const resSel = document.getElementById('adminResSelect');
+  resSel.innerHTML = '';
+  resources.forEach(r => {
+    const opt = document.createElement('option');
+    opt.value = r.id;
+    opt.textContent = `${r.name} (avail ${r.available})`;
+    resSel.appendChild(opt);
   });
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  loadBeds();
+  populateAdminSelects();
 
+  document.getElementById('allocBtn').addEventListener('click', async () => {
+    const bedId = document.getElementById('adminBedSelect').value;
+    const resourceId = document.getElementById('adminResSelect').value;
+    const qty = parseInt(document.getElementById('adminQty').value, 10) || 1;
 
-// ------------------------- ALLOCATE RESOURCE -------------------------
-allocBtn.addEventListener("click", async () => {
-  const bedId = bedSelect.value;
-  const resourceId = resSelect.value;
-  const qty = parseInt(qtyInput.value);
-
-  if (!bedId || !resourceId || qty < 1) {
-    allocMsg.textContent = "⚠ Please select bed, resource & quantity.";
-    allocMsg.style.color = "red";
-    return;
-  }
-
-  const res = await fetch(`${API}/allocate-resource`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bedId, resourceId, qty })
+    try {
+      await api('/api/allocate-resource', {
+        method: 'POST',
+        body: { bedId, resourceId, qty }
+      });
+      document.getElementById('allocMsg').innerText = 'Allocated';
+      loadBeds();
+      populateAdminSelects();
+    } catch (err) {
+      document.getElementById('allocMsg').innerText = err.error || 'Error';
+    }
   });
 
-  const data = await res.json();
-
-  if (data.error) {
-    allocMsg.textContent = "❌ " + data.error;
-    allocMsg.style.color = "red";
-  } else {
-    allocMsg.textContent = "✔ Resource Allocated Successfully!";
-    allocMsg.style.color = "green";
+  setInterval(() => {
     loadBeds();
-    loadResources();
-  }
+    populateAdminSelects();
+  }, 5000);
 });
-
-
-
-// ------------------------- LOGOUT BUTTON -------------------------
-document.getElementById("logout").addEventListener("click", () => {
-  localStorage.clear();
-  sessionStorage.clear();
-  window.location.href = "/index.html";
-});
-
-
-
-// ------------------------- INITIAL LOAD -------------------------
-loadBeds();
-loadResources();

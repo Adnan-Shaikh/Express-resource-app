@@ -1,8 +1,8 @@
 [
   {
     "id": "B1",
-    "status": "reserved",
-    "patientId": "P11",
+    "status": "available",
+    "patientId": null,
     "resources": [
       {
         "resourceId": "R1",
@@ -15,7 +15,13 @@
     "id": "B2",
     "status": "available",
     "patientId": null,
-    "resources": []
+    "resources": [
+      {
+        "resourceId": "R3",
+        "name": "ECG Machine",
+        "qty": 1
+      }
+    ]
   },
   {
     "id": "B3",

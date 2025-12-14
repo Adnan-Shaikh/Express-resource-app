@@ -1,3 +1,6 @@
+// server.js (updated)
+// Full file — paste/replace your current server.js with this.
+
 const express = require('express');
 const session = require('express-session');
 const fs = require('fs');
@@ -8,7 +11,10 @@ const cors = require('cors');
 const app = express();
 const DATA_DIR = path.join(__dirname, 'data');
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(session({
   secret: 'replace_with_strong_secret',
@@ -71,29 +77,11 @@ app.get('/resources.html', requireRole('admin'), (req, res) => {
 });
 
 // -------------------- BEDS --------------------
-// -------------------- BEDS --------------------
+// Return beds as-is (admin.js expects bed.resources array)
 app.get('/api/beds', requireRole(['receptionist', 'admin']), (req, res) => {
   const beds = readJSON('beds.json');
-  const resources = readJSON('resources.json');
-
-  const finalBeds = beds.map(bed => {
-    const matchedResource = resources.find(r => r.id === bed.allocatedResource);
-
-    return {
-      ...bed,
-      // restore admin panel expected structure
-      resources: matchedResource
-        ? [{ name: matchedResource.name, qty: 1 }]
-        : bed.resources || [],
-
-      resourceName: matchedResource ? matchedResource.name : null
-    };
-  });
-
-  res.json(finalBeds);
+  res.json(beds);
 });
-
-
 
 // -------------------- PATIENT ASSIGNMENT --------------------
 app.post('/api/patients', requireRole(['receptionist', 'admin']), (req, res) => {
@@ -141,16 +129,16 @@ app.post('/api/patients', requireRole(['receptionist', 'admin']), (req, res) => 
   res.json({ ok: true, patient: newPatient });
 });
 
-// -------------------- FRONTDESK ALIASES (fix for your JS) --------------------
+// -------------------- FRONTDESK ALIASES (compat) --------------------
 app.get('/api/resources-frontdesk', requireRole(['receptionist', 'admin']), (req, res) => {
   res.json(readJSON('resources.json'));
 });
 
 app.post('/api/patients-frontdesk', requireRole(['receptionist', 'admin']), (req, res) => {
-  const body = req.body;  // keep the data
-  req.body = body;        // ensure Express keeps it
-
-  // Call main handler manually with correct method and body
+  // handled same as /api/patients — call directly
+  const body = req.body;
+  req.body = body;
+  // reuse code above by calling logic inline to avoid router hacks
   const { name, age, problem, bedId, resourceId } = body;
 
   if (!name || !bedId) return res.status(400).json({ error: "Missing fields" });
@@ -195,17 +183,19 @@ app.post('/api/patients-frontdesk', requireRole(['receptionist', 'admin']), (req
   return res.json({ ok: true, patient: newPatient });
 });
 
-
 // -------------------- ADMIN ROUTES --------------------
 app.get('/api/patients', requireRole(['receptionist', 'admin']), (req, res) => {
   res.json(readJSON('patients.json'));
 });
 
+// -------------------- CHANGE BED STATUS (free resources when becoming available) --------------------
 app.put('/api/beds/:id/status', requireRole('admin'), (req, res) => {
   const id = req.params.id;
   const { status } = req.body;
 
   const beds = readJSON('beds.json');
+  const resources = readJSON('resources.json');
+
   const bed = beds.find(b => b.id === id);
   if (!bed) return res.status(404).json({ error: 'Bed not found' });
 
@@ -213,14 +203,34 @@ app.put('/api/beds/:id/status', requireRole('admin'), (req, res) => {
     return res.status(400).json({ error: 'Invalid status' });
   }
 
-  if (status === 'available') bed.patientId = null;
+  // If bed was reserved and now becoming available, release resources back to pool
+  if (bed.status === 'reserved' && status === 'available') {
+    if (Array.isArray(bed.resources) && bed.resources.length > 0) {
+      bed.resources.forEach(r => {
+        // r expected structure: { resourceId, name, qty }
+        const resObj = resources.find(x => x.id === r.resourceId || x.name === r.name);
+        if (resObj) {
+          resObj.available = (resObj.available || 0) + (r.qty || 0);
+          // don't exceed total (optional): resObj.available = Math.min(resObj.available, resObj.total);
+        }
+      });
+    }
+    // clear bed resources and patient
+    bed.resources = [];
+    bed.patientId = null;
+  }
+
+  // Update status always
   bed.status = status;
 
+  // Save changes
   writeJSON('beds.json', beds);
+  writeJSON('resources.json', resources);
+
   res.json({ ok: true, bed });
 });
 
-// Only admin version (leave untouched)
+// -------------------- RESOURCES (ADMIN) --------------------
 app.get('/api/resources', requireRole('admin'), (req, res) => {
   res.json(readJSON('resources.json'));
 });
@@ -244,8 +254,13 @@ app.post('/api/resources', requireRole('admin'), (req, res) => {
   res.json({ ok: true, resource });
 });
 
+// -------------------- ADMIN: allocate resource to bed --------------------
 app.post('/api/allocate-resource', requireRole('admin'), (req, res) => {
   const { bedId, resourceId, qty } = req.body;
+
+  if (!bedId || !resourceId || typeof qty !== 'number') {
+    return res.status(400).json({ error: 'bedId, resourceId and numeric qty required' });
+  }
 
   const beds = readJSON('beds.json');
   const resources = readJSON('resources.json');
@@ -256,20 +271,19 @@ app.post('/api/allocate-resource', requireRole('admin'), (req, res) => {
   const resource = resources.find(r => r.id === resourceId);
   if (!resource) return res.status(404).json({ error: 'Resource not found' });
 
-  if (resource.available < qty)
-    return res.status(400).json({ error: 'Not enough available' });
+  if (resource.available < qty) return res.status(400).json({ error: 'Not enough available' });
 
   resource.available -= qty;
 
   if (!bed.resources) bed.resources = [];
-  bed.resources.push({ name: resource.name, qty });
+  // push resource entry with resourceId so freeing works reliably
+  bed.resources.push({ resourceId: resource.id, name: resource.name, qty });
 
   writeJSON('resources.json', resources);
   writeJSON('beds.json', beds);
 
-  res.json({ ok: true });
+  res.json({ ok: true, bed });
 });
-
 
 // -------------------- START --------------------
 const PORT = process.env.PORT || 3000;
